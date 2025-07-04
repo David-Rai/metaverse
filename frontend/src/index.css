@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+*{
+    font-family: "Inter", sans-serif;
+}
+@theme{
+    --color-primary-100:#282D4E;
+}
+@layer components{
+    .btn{
+        @apply h-[40px] w-[140px] text-white rounded-md bg-green-600 my-5
+    }
+
+    .main {
+        @apply h-screen w-full flex bg-primary-100 flex-col 
+    }
+    .input{
+        @apply  border-[1px] border-gray-500 pl-2 rounded-md h-[40px] w-full focus:outline-1 focus:outline-blue-300
+    }
+}
