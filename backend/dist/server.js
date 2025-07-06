@@ -6,6 +6,7 @@ import { authRouter } from './routers/auth.router.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import { errorHandler } from './middlwares/error.middlware.js';
 dotenv.config({ path: path.resolve('../.env') });
 //Socket and Routing instance
 const app = express();
@@ -44,5 +45,7 @@ io.on("connection", (client) => {
 app.get('/', (req, res) => {
     res.json({ message: "lets make metaverse with auth and relatime" });
 });
+//Error handling middlware
+app.use(errorHandler);
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.log("server is running on", PORT));
