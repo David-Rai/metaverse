@@ -3,8 +3,12 @@ import express from 'express'
 import {Server} from 'socket.io'
 import http from 'http'
 import { nanoid } from 'nanoid'
-import { authRouter } from './routers/auth.js'
+import { authRouter } from './routers/auth.router.js'
 import cors from 'cors'
+import  dotenv from 'dotenv'
+import path from 'path'
+
+dotenv.config({path:path.resolve('../.env')})
 
 //Socket and Routing instance
 const app=express()
@@ -21,6 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 //Router implementation
+app.use('/auth',authRouter)
 
 
 //*******Socket connection handling******* */
@@ -53,8 +58,9 @@ io.on("connection",(client)=>{
 
 //Routing handling
 app.get('/',(req,res)=>{
-res.json({message:"lets make metaverse"})
+res.json({message:"lets make metaverse with auth and relatime"})
 
 })
 
-server.listen(1111,()=>console.log("server is running"))
+const PORT=process.env.PORT
+server.listen(PORT,()=>console.log("server is running on",PORT))
