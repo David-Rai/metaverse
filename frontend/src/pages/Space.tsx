@@ -31,8 +31,7 @@ const Space = () => {
 
 
     //someone joined
-    socket.on("someoneJoin", ({ userID ,rooms}) => {
-      console.log(rooms)
+    socket.on("someoneJoin", ({ userID}) => {
       setPlayers([...players, { x: 0, y: 0, id: userID }])
       alert("New user")
       console.log("new user", userID)

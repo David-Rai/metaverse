@@ -3,18 +3,25 @@ import express from 'express'
 import {Server} from 'socket.io'
 import http from 'http'
 import { nanoid } from 'nanoid'
+import { authRouter } from './routers/auth.js'
+import cors from 'cors'
 
-
+//Socket and Routing instance
 const app=express()
 const server=http.createServer(app)
 const io=new Server(server,{
     cors:{
         origin:"*"
     }
-})
+}) 
 
+//Middlwares for json parsing and form parsing
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 
-let rooms=[]
+//Router implementation
+
 
 //*******Socket connection handling******* */
 io.on("connection",(client)=>{
@@ -25,14 +32,6 @@ io.on("connection",(client)=>{
         console.log(`Creating the room`)
         const spaceID=nanoid()
 
-   
-        let newRoom={
-            id:spaceID,
-            users:[]
-        }
-
-        rooms.push(newRoom)
-
         client.join(spaceID)
         client.emit("spaceID",{spaceID})
     })
@@ -42,22 +41,12 @@ io.on("connection",(client)=>{
     client.on("joinSpace",({spaceID,userID})=>{
 
 
-
-        let user={
-            id:userID,
-            x:0,
-            y:0
-        }
-
-        let room=rooms.filter(room => room.id === spaceID)
-        room.users.push(user)
-
         //joining the space
         client.join(spaceID)
         client.emit("spaceID",{spaceID})
 
         //sending the all users that someone joined
-        client.to(spaceID).emit("someoneJoin",{userID,rooms})
+        client.to(spaceID).emit("someoneJoin",{userID})
 
     })
 })
