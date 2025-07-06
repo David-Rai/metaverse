@@ -7,6 +7,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { errorHandler } from './middlwares/error.middlware.js';
+import { roomRouter } from './routers/room.router.js';
 dotenv.config({ path: path.resolve('../.env') });
 //Socket and Routing instance
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //Router implementation
 app.use('/auth', authRouter);
+app.use(roomRouter);
 //*******Socket connection handling******* */
 io.on("connection", (client) => {
     console.log(client.id);

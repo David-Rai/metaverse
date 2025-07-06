@@ -4,8 +4,7 @@ import bcrypt from 'bcrypt'
 import db from '../models/db.js'
 import { nanoid } from 'nanoid'
 import { checkEmail } from "../utils/checkEmail.js";
-import { RowDataPacket } from 'mysql2/promise'
-
+import { RowDataPacket } from "mysql2";
 
 //Secret key for my JWT 
 const secret_Key = process.env.JWT_SECRET || "yoursecretkey"
@@ -24,14 +23,14 @@ interface signinBody {
 
 
 //*************Signup controller*********
-export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Response,next:NextFunction) => {
+export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Response, next: NextFunction) => {
     const { name, password, email } = req.body
     const user_id = nanoid()
 
     //Checking the email existance
-    // const exist : any= await checkEmail(email)
+    const exist = await checkEmail(email)
     // if (exist.length > 0) {
-    //     return res.status(500).json({ message: "email already exist", status: 500 })
+    // return res.status(500).json({ message: "email already exist", status: 500 })
     // }
 
 
@@ -47,7 +46,7 @@ export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Respon
 
 
                 //Creating the JWT Token
-                const token = jwt.sign({ email, name }, secret_Key)
+                const token = jwt.sign({ email, user_id }, secret_Key)
                 res.cookie("token", token)//setting the cookies in client side
 
                 res.status(201).json({ data: req.body, token, status: 201, result })
@@ -61,10 +60,28 @@ export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Respon
     });
 }
 
+
 //************Signin controller************
-export const handleSignin = (req: Request<{}, {}, signinBody>, res: Response) => {
+export const handleSignin = async (req: Request<{}, {}, signinBody>, res: Response, next: NextFunction) => {
     const { email, password } = req.body
 
-    res.json(req.body)
+    //Checking into the database
+    const q = "select * from users where email=?"
+    const [rows] = await db.execute<RowDataPacket[]>(q, [email])
+
+    //Getting the real password
+    const hash = await rows[0].password
+    bcrypt.compare(password, hash, function (err, result) {
+        if (err) {
+            return next(err)
+        }
+        // if (result) {
+        //Creating the JWT Token
+        const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key)
+        res.cookie("token", token)//setting the cookies in client side
+        res.json({ status: 200, token })
+        // }
+    });
+
 }
 

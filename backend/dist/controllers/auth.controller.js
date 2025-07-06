@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import db from '../models/db.js';
 import { nanoid } from 'nanoid';
+import { checkEmail } from "../utils/checkEmail.js";
 //Secret key for my JWT 
 const secret_Key = process.env.JWT_SECRET || "yoursecretkey";
 //*************Signup controller*********
@@ -18,9 +19,9 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
     const { name, password, email } = req.body;
     const user_id = nanoid();
     //Checking the email existance
-    // const exist : any= await checkEmail(email)
+    const exist = yield checkEmail(email);
     // if (exist.length > 0) {
-    //     return res.status(500).json({ message: "email already exist", status: 500 })
+    // return res.status(500).json({ message: "email already exist", status: 500 })
     // }
     //Encrypting the password
     bcrypt.hash(password, 10, function (err, hash) {
@@ -33,7 +34,7 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                     const result = yield db.execute(q, [name, email, password, user_id]);
                     console.log(result);
                     //Creating the JWT Token
-                    const token = jwt.sign({ email, name }, secret_Key);
+                    const token = jwt.sign({ email, user_id }, secret_Key);
                     res.cookie("token", token); //setting the cookies in client side
                     res.status(201).json({ data: req.body, token, status: 201, result });
                 }
@@ -47,7 +48,22 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
     });
 });
 //************Signin controller************
-export const handleSignin = (req, res) => {
+export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    res.json(req.body);
-};
+    //Checking into the database
+    const q = "select * from users where email=?";
+    const [rows] = yield db.execute(q, [email]);
+    //Getting the real password
+    const hash = yield rows[0].password;
+    bcrypt.compare(password, hash, function (err, result) {
+        if (err) {
+            return next(err);
+        }
+        // if (result) {
+        //Creating the JWT Token
+        const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key);
+        res.cookie("token", token); //setting the cookies in client side
+        res.json({ status: 200, token });
+        // }
+    });
+});
