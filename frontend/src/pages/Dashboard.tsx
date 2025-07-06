@@ -17,14 +17,14 @@ const Dashboard = () => {
 
 
    //Getting the spaceID
-   socket.on("spaceID",({spaceID})=>{
+   socket.on("spaceCreated",({spaceID})=>{
     console.log(spaceID)
     navigate(`/space/${spaceID}`)
    })
   },[])
 
 
-  //Handle create space
+  //Handle create space or room
   const handleCreate = () => {
     const newSpaceName = inputRef?.current && inputRef.current.value
 
@@ -33,7 +33,7 @@ const Dashboard = () => {
     console.log("name",myname)
 
     //create the socket room or space
-    socket.emit("createSpace",{name:myname})
+    socket.emit("createSpace",{room_name:newSpaceName})
   }
 
   return (

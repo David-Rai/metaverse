@@ -35,7 +35,12 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                     console.log(result);
                     //Creating the JWT Token
                     const token = jwt.sign({ email, user_id }, secret_Key);
-                    res.cookie("token", token); //setting the cookies in client side
+                    res.cookie('token', token, {
+                        httpOnly: true,
+                        secure: false, // use false in local dev without HTTPS
+                        sameSite: 'lax',
+                        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                    });
                     res.status(201).json({ data: req.body, token, status: 201, result });
                 }
                 catch (err) {

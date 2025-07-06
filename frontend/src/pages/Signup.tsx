@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
+import axios from 'axios'
 
 type Inputs = {
     username: string
@@ -24,8 +25,17 @@ const Signup = () => {
     }
 
     //Handle the form submission
-    const onSubmit= (data) => {
+    const onSubmit = async (data) => {
         console.log(data)
+        const result = await axios.post("http://localhost:1111/auth/signup", {
+            name: data.name,
+            email: data.email,
+            password: data.password
+        })
+        console.log(result)
+        if (result.status === 201) {
+            navigate("/dashboard")
+        }
     }
 
     return (
@@ -37,7 +47,7 @@ const Signup = () => {
 
                 {/* Username  */}
                 <input type="text" name='username' placeholder='Username' className='input'
-                    {...register("username", {
+                    {...register("name", {
                         required: "username is required"
                     })}
                 />
@@ -45,17 +55,17 @@ const Signup = () => {
 
                 {/* Email */}
                 <input type="email" name='email' placeholder='Email' className='input'
-                    {...register("email",{
-                        required:"Email is required"
+                    {...register("email", {
+                        required: "Email is required"
                     })}
                 />
                 <p className='w-full text-left text-red-500'>{errors.email && errors.email.message}</p>
 
 
-               {/* Password                 */}
+                {/* Password                 */}
                 <input type="password" name='password' placeholder='Passsword' className='input'
-                    {...register("password",{
-                        required:"Password is required"
+                    {...register("password", {
+                        required: "Password is required"
                     })}
                 />
                 <p className='w-full text-left text-red-500'>{errors.password && errors.password.message}</p>

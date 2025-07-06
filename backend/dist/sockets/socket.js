@@ -1,0 +1,35 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { nanoid } from 'nanoid';
+import db from '../models/db.js';
+//*****Socket Connection******** */
+export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(client.id);
+    //******CREATING THE ROOM********** */
+    client.on("createSpace", (_a) => __awaiter(void 0, [_a], void 0, function* ({ room_name, user_id }) {
+        console.log(`Creating the room`);
+        const spaceID = nanoid();
+        const room_id = nanoid();
+        //Storing the room data into the database
+        const q = "insert into rooms (room_name,room_id,user_id) values(?,?,?)";
+        const result = yield db.execute(q, [room_name, room_id, user_id]);
+        console.log(result);
+        client.join(spaceID);
+        client.emit("spaceCreated", { spaceID, result });
+    }));
+    //Joining the space
+    client.on("joinSpace", ({ spaceID, userID }) => {
+        //joining the space
+        client.join(spaceID);
+        client.emit("spaceID", { spaceID });
+        //sending the all users that someone joined
+        client.to(spaceID).emit("someoneJoin", { userID });
+    });
+});
