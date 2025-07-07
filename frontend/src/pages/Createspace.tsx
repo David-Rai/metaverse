@@ -32,10 +32,9 @@ const Createspace = () => {
     if (inputRef === null) return
     const space_name = inputRef.current && inputRef.current.value
     console.log(space_name)
-    const user_id="12345"
 
     //sending to the socket server
-    socket?.emit("space-create",{user_id,space_name})
+    socket?.emit("space-create",{space_name})
 
   }
 

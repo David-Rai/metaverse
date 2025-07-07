@@ -19,7 +19,7 @@ const Signin = () => {
     }
 
     //Handling the login
-    const handleLogin = async (data:data) => {
+    const handleLogin = async (data: data) => {
         // console.log(data)
         const result = await axios.post("http://localhost:1111/auth/signin", {
             email: data.email,
@@ -28,11 +28,11 @@ const Signin = () => {
             {
                 withCredentials: true
             })
-            console.log(result.data)
+        console.log(result.data)
 
-            if(result.data.status === 200){
-                navigate(`/dashboard`)
-            }
+        if (result.data.status === 200) {
+            navigate(`/dashboard`)
+        }
     }
 
     return (

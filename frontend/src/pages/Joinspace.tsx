@@ -22,10 +22,9 @@ export const Joinspace = () => {
     if (inputRef === null) return
     const space_id = inputRef.current && inputRef.current.value
     console.log(space_id)
-    const user_id = "6789"
 
     //sending to the socket server
-    socket?.emit("join-space", { user_id, space_id })
+    socket?.emit("join-space", { space_id })
 
   }
 

@@ -12,7 +12,8 @@ interface Props {
 //Socket context provider
 export const SocketProvider = ({ children }: Props) => {
     const socket = io("http://localhost:1111",{
-      autoConnect:false
+      autoConnect:false,
+      withCredentials:true
     })
 
     //Clean up function

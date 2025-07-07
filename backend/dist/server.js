@@ -18,12 +18,14 @@ import path from 'path';
 import { errorHandler } from './middlwares/error.middlware.js';
 import { handleSocketConnection } from './sockets/socket.js';
 import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken';
 import db from './models/db.js';
 dotenv.config({ path: path.resolve('../.env') });
 //Socket and Routing instance
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
+    cookie: true,
     cors: {
         origin: "http://localhost:5173",
         credentials: true
@@ -46,11 +48,20 @@ io.on("connection", (client) => {
 //Routing handling
 app.get('/:username', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { username } = req.params;
+    const { token } = req.cookies;
+    const secret = process.env.JWT_SECRET || "yoursecretkey";
+    if (!token) {
+        throw new Error("No token provided");
+    }
+    if (!secret) {
+        throw new Error("Missing JWT secret in environment variables");
+    }
+    const data = jwt.verify(token, secret);
     try {
         //getting your details from database
         const q = "select user_id,email,name from users where name=?";
         const [result] = yield db.execute(q, [username]);
-        res.json(result);
+        res.json({ result, token, data });
     }
     catch (err) {
         next(err);
