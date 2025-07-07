@@ -31,6 +31,6 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         const q = 'insert into space_user (space_id,user_id) values(?,?)';
         const result = yield db.execute(q, [space_id, user_id]);
         client.emit("joined", { space_id, status: 201, result });
-        // io.to(space_id).emit("")
+        io.to(space_id).emit("new-joined", { user_id });
     }));
 });

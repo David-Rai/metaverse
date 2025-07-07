@@ -10,7 +10,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { errorHandler } from './middlwares/error.middlware.js'
 import { handleSocketConnection } from './sockets/socket.js'
-import  cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 
 dotenv.config({ path: path.resolve('../.env') })
 
@@ -19,13 +19,17 @@ const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: "*",
-        credentials:true
+      origin: "http://localhost:5173",
+      credentials: true
     }
-})
+  });
+  
 
-//Middlwares for json parsing and form parsing
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:5173",  // your frontend origin here
+    credentials: true
+}));
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())

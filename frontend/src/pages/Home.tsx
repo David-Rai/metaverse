@@ -8,7 +8,6 @@ const navigate=useNavigate()
 
 //Navigating to the signup and signin page
 const handleStart=()=>{
-
   navigate('/signup')
 }
 

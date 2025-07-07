@@ -31,22 +31,15 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                 try {
                     //Storing in the Database
                     const q = "insert into users (name,email,password,user_id) values(?,?,?,?)";
-                    const result = yield db.execute(q, [name, email, password, user_id]);
+                    const result = yield db.execute(q, [name, email, hash, user_id]);
                     console.log(result);
                     //Creating the JWT Token
                     const token = jwt.sign({ email, user_id }, secret_Key);
-                    res.cookie('token', token, {
-                        httpOnly: false,
-                        secure: false, // use false in local dev without HTTPS
-                        sameSite: 'lax',
-                        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                    });
-                    res.status(201).json({ data: req.body, token, status: 201, result });
+                    res.cookie('token', token);
+                    return res.status(201).json({ data: req.body, token, status: 201, result });
                 }
                 catch (err) {
-                    console.log(err);
                     next(err);
-                    return res.status(500).json({ message: "erorr hai ta", err });
                 }
             }
         });
@@ -64,11 +57,9 @@ export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0
         if (err) {
             return next(err);
         }
-        // if (result) {
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key);
         res.cookie("token", token); //setting the cookies in client side
         res.json({ status: 200, token });
-        // }
     });
 });

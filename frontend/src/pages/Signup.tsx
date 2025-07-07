@@ -24,14 +24,22 @@ const Signup = () => {
         navigate("/signin")
     }
 
+    type data = {
+        [key: string]: string
+    }
+
     //Handle the form submission
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: data) => {
         console.log(data)
         const result = await axios.post("http://localhost:1111/auth/signup", {
             name: data.name,
             email: data.email,
             password: data.password
-        })
+        },
+            {
+                withCredentials: true
+            })
+
         console.log(result)
         if (result.status === 201) {
             navigate("/dashboard")
