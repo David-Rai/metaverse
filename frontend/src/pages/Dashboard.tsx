@@ -5,43 +5,25 @@ import { nanoid } from 'nanoid'
 
 
 const Dashboard = () => {
-  const socket = io("http://localhost:1111")
+  // const socket = io("http://localhost:1111")
   const inputRef = useRef<HTMLInputElement | null>(null)
   const navigate = useNavigate()
 
-  //Socket connection handling
-  useEffect(()=>{
-   socket.on("connect",()=>{
-    console.log("connected to server")
-   })
 
-
-   //Getting the spaceID
-   socket.on("spaceCreated",({spaceID})=>{
-    console.log(spaceID)
-    navigate(`/space/${spaceID}`)
-   })
-  },[])
-
-
-  //Handle create space or room
-  const handleCreate = () => {
-    const newSpaceName = inputRef?.current && inputRef.current.value
-
-    //your unique name
-    const myname=nanoid()
-    console.log("name",myname)
-
-    //create the socket room or space
-    socket.emit("createSpace",{room_name:newSpaceName})
-  }
 
   return (
-    <main className='main items-center justify-center'>
-      <div className='flex flex-col items-center'>
-        <input type="text" placeholder='set a space name' className='input w-[300px]' ref={inputRef} value="ream" />
-        <button className='btn' onClick={handleCreate}>Create space</button>
-      </div>
+    <main className='main'>
+
+      {/* Navigation */}
+      <nav className='flex w-full h-[10%] items-center gap-5 justify-end px-5'>
+        <button className='btn' onClick={() => navigate('/createspace')} >Create new space</button>
+        <button className='btn' onClick={() => navigate("/joinspace")}>Join space</button>
+      </nav>
+
+      {/* Rooms container */}
+      <section className='h-[90%] w-full p-5'>
+        <h1 className='text-white'>Active Rooms</h1>
+      </section>
     </main>
   )
 }
