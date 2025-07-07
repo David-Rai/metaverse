@@ -3,12 +3,12 @@ import express from 'express'
 import { Server } from 'socket.io'
 import http from 'http'
 import { nanoid } from 'nanoid'
+import { spaceRouter } from './routers/space.router.js'
 import { authRouter } from './routers/auth.router.js'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import path from 'path'
 import { errorHandler } from './middlwares/error.middlware.js'
-import { roomRouter } from './routers/room.router.js'
 import { handleSocketConnection } from './sockets/socket.js'
 import  cookieParser from 'cookie-parser'
 
@@ -32,7 +32,7 @@ app.use(cookieParser())
 
 //Router implementation
 app.use('/auth', authRouter)
-app.use(roomRouter)
+app.use(spaceRouter)
 
 
 //*******Socket connection handling******* */

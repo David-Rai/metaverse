@@ -9,19 +9,18 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
     console.log(client.id)
 
     //******CREATING THE ROOM********** */
-    client.on("createSpace",async  ({ room_name, user_id }) => {
-        console.log(`Creating the room`)
-        const spaceID = nanoid()
-        const room_id = nanoid()
+    client.on("space-create", async ({ space_name, user_id }) => {
+        console.log(`Creating the space`)
+        const space_id = nanoid()
 
 
         //Storing the room data into the database
-        const q = "insert into rooms (room_name,room_id,user_id) values(?,?,?)"
-        const result = await db.execute(q, [room_name, room_id, user_id])
+        const q = "insert into spaces (space_name,space_id,user_id) values(?,?,?)"
+        const result = await db.execute(q, [space_name, space_id, user_id])
         console.log(result)
 
-        client.join(spaceID)
-        client.emit("spaceCreated", { spaceID,result })
+        client.join(space_id)//creating the socket room
+        client.emit("space-created", { space_id, result, status: 201 })
     })
 
 

@@ -13,16 +13,15 @@ import db from '../models/db.js';
 export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(client.id);
     //******CREATING THE ROOM********** */
-    client.on("createSpace", (_a) => __awaiter(void 0, [_a], void 0, function* ({ room_name, user_id }) {
-        console.log(`Creating the room`);
-        const spaceID = nanoid();
-        const room_id = nanoid();
+    client.on("space-create", (_a) => __awaiter(void 0, [_a], void 0, function* ({ space_name, user_id }) {
+        console.log(`Creating the space`);
+        const space_id = nanoid();
         //Storing the room data into the database
-        const q = "insert into rooms (room_name,room_id,user_id) values(?,?,?)";
-        const result = yield db.execute(q, [room_name, room_id, user_id]);
+        const q = "insert into spaces (space_name,space_id,user_id) values(?,?,?)";
+        const result = yield db.execute(q, [space_name, space_id, user_id]);
         console.log(result);
-        client.join(spaceID);
-        client.emit("spaceCreated", { spaceID, result });
+        client.join(space_id); //creating the socket room
+        client.emit("space-created", { space_id, result, status: 201 });
     }));
     //Joining the space
     client.on("joinSpace", ({ spaceID, userID }) => {
