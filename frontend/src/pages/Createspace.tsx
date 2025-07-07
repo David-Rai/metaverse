@@ -21,9 +21,9 @@ const Createspace = () => {
 
 
     //Getting the spaceID
-    socket.on("spaceCreated", ({ spaceID }) => {
-      console.log(spaceID)
-      navigate(`/space/${spaceID}`)
+    socket.on("space-created", (message) => {
+      console.log("from server",message)
+      navigate(`/space/${message.space_id}`)
     })
   }, [])
 
@@ -31,9 +31,11 @@ const Createspace = () => {
   const handleCreateSpace = () => {
     if (inputRef === null) return
     const space_name = inputRef.current && inputRef.current.value
+    console.log(space_name)
+    const user_id="12345"
 
     //sending to the socket server
-
+    socket?.emit("space-create",{user_id,space_name})
 
   }
 

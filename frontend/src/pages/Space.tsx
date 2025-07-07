@@ -17,26 +17,9 @@ const Space = () => {
   const [position, setPosition] = useState({ x: 100, y: 100 }); // Initial position
   const speed = 10; // Movement speed per key press
 
+  //Socket connection handling
   useEffect(() => {
-    const spaceID = params.spaceID
-
-    //Joining the socket room
-    socket.emit("joinSpace", { spaceID, userID: myID })
-
-    //Joined message
-    socket.on("spaceID", ({ spaceID }) => {
-      console.log("you have joined", spaceID)
-
-    })
-
-
-    //someone joined
-    socket.on("someoneJoin", ({ userID}) => {
-      setPlayers([...players, { x: 0, y: 0, id: userID }])
-      alert("New user")
-      console.log("new user", userID)
-    })
-
+    const space_id = params.spaceID
 
 
   }, [])
@@ -68,23 +51,7 @@ const Space = () => {
   return (
     <main className='h-screen w-full bg-gray-700'>
 
-      {
-        players.length > 0 && players.map((p) => {
-          return (
-            <div key={p.id}
-              className='h-[100px] w-[100px] bg-green-500 absolute text-[8px]'
-              style={{ left: p.x, top: p.y }}
-            >{p.id}</div>
-          )
-        })
-      }
-
-      <div className='h-[100px] w-[100px] bg-red-500 absolute'
-        style={{
-          left: position.x,
-          top: position.y,
-        }}
-      >me</div>
+    
     </main>
   )
 }

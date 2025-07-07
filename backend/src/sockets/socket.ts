@@ -20,20 +20,22 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
         console.log(result)
 
         client.join(space_id)//creating the socket room
-        client.emit("space-created", { space_id, result, status: 201 })
+        client.emit("space-created", { space_id , status: 201 })
     })
 
 
     //Joining the space
-    client.on("joinSpace", ({ spaceID, userID }) => {
+    client.on("join-space",async ({ space_id, user_id}) => {
 
+        //Joinin the socket room
+        client.join(space_id)
 
-        //joining the space
-        client.join(spaceID)
-        client.emit("spaceID", { spaceID })
+        //storing into the database
+        const q='insert into space_user (space_id,user_id) values(?,?)'
+        const result=await db.execute(q,[space_id,user_id])
 
-        //sending the all users that someone joined
-        client.to(spaceID).emit("someoneJoin", { userID })
+        client.emit("joined",{space_id,status:201,result})
+        io.to(space_id).emit("new-joined",{user_id})
 
     })
 }

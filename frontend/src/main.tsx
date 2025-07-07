@@ -25,6 +25,6 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/joinspace" element={<Joinspace />} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
+      <ToastContainer autoClose={1000} />
   </SocketProvider>
 )

@@ -21,14 +21,16 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         const result = yield db.execute(q, [space_name, space_id, user_id]);
         console.log(result);
         client.join(space_id); //creating the socket room
-        client.emit("space-created", { space_id, result, status: 201 });
+        client.emit("space-created", { space_id, status: 201 });
     }));
     //Joining the space
-    client.on("joinSpace", ({ spaceID, userID }) => {
-        //joining the space
-        client.join(spaceID);
-        client.emit("spaceID", { spaceID });
-        //sending the all users that someone joined
-        client.to(spaceID).emit("someoneJoin", { userID });
-    });
+    client.on("join-space", (_a) => __awaiter(void 0, [_a], void 0, function* ({ space_id, user_id }) {
+        //Joinin the socket room
+        client.join(space_id);
+        //storing into the database
+        const q = 'insert into space_user (space_id,user_id) values(?,?)';
+        const result = yield db.execute(q, [space_id, user_id]);
+        client.emit("joined", { space_id, status: 201, result });
+        // io.to(space_id).emit("")
+    }));
 });
