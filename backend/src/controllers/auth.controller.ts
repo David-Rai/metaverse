@@ -41,7 +41,7 @@ export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Respon
             try {
                 //Storing in the Database
                 const q = "insert into users (name,email,password,user_id) values(?,?,?,?)"
-                const result = await db.execute(q, [name, email,hash, user_id])
+                const result = await db.execute(q, [name, email, hash, user_id])
                 console.log(result)
 
 
@@ -50,7 +50,7 @@ export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Respon
                 res.cookie('token', token)
 
 
-              return res.status(201).json({ data: req.body, token, status: 201, result })
+                return res.status(201).json({ data: req.body, token, status: 201, result })
             }
             catch (err) {
                 next(err)
@@ -75,6 +75,11 @@ export const handleSignin = async (req: Request<{}, {}, signinBody>, res: Respon
             return next(err)
         }
 
+        if (!result) {
+            const err = new Error("password milena")
+            return next(err)
+        }
+        
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key)
         res.cookie("token", token)//setting the cookies in client side

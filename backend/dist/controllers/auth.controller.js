@@ -57,6 +57,10 @@ export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0
         if (err) {
             return next(err);
         }
+        if (!result) {
+            const err = new Error("password milena");
+            return next(err);
+        }
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key);
         res.cookie("token", token); //setting the cookies in client side

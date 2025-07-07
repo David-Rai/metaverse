@@ -11,6 +11,7 @@ import path from 'path'
 import { errorHandler } from './middlwares/error.middlware.js'
 import { handleSocketConnection } from './sockets/socket.js'
 import cookieParser from 'cookie-parser'
+import db from './models/db.js'
 
 dotenv.config({ path: path.resolve('../.env') })
 
@@ -18,16 +19,16 @@ dotenv.config({ path: path.resolve('../.env') })
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
-    cors: {
-      origin: "http://localhost:5173",
-      credentials: true
-    }
-  });
-  
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true
+  }
+});
+
 
 app.use(cors({
-    origin: "http://localhost:5173",  // your frontend origin here
-    credentials: true
+  origin: "http://localhost:5173",  // your frontend origin here
+  credentials: true
 }));
 
 app.use(express.json())
@@ -41,12 +42,24 @@ app.use(spaceRouter)
 
 //*******Socket connection handling******* */
 io.on("connection", (client) => {
-    handleSocketConnection(client, io)
+  handleSocketConnection(client, io)
 })
 
 //Routing handling
-app.get('/', (req, res) => {
-    res.json({ message: "lets make metaverse with auth and relatime" })
+app.get('/:username', async (req, res,next) => {
+  const { username } = req.params
+
+  try {
+    //getting your details from database
+    const q = "select user_id,email,name from users where name=?"
+    const [result] = await db.execute(q, [username])
+    res.json(result)
+
+
+  }
+  catch (err) {
+    next(err)
+  }
 
 })
 

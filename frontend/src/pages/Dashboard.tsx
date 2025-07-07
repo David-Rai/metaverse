@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router'
 import { nanoid } from 'nanoid'
+import axios from 'axios'
 
 
 const Dashboard = () => {
@@ -9,7 +10,15 @@ const Dashboard = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const navigate = useNavigate()
 
+  //Setting up the Usersdata
+useEffect(()=>{
+const fetchData=async ()=>{
+const result=await axios("http://localhost:1111/dasd")
+console.log(result)
+}
 
+fetchData()
+},[])
 
   return (
     <main className='main'>
