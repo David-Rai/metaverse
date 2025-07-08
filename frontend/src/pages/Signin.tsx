@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
@@ -17,6 +17,20 @@ const Signin = () => {
     type data = {
         [key: string]: string
     }
+
+    //Verifying if already login
+    useEffect(() => {
+        async function verify() {
+            const result = await axios.get("http://localhost:1111/auth/verify", {
+                withCredentials: true
+            })
+            if (result.data.status) {
+                navigate(`/dashboard`)
+            }
+        }
+
+        verify()
+    }, [])
 
     //Handling the login
     const handleLogin = async (data: data) => {

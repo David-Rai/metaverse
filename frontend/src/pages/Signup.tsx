@@ -23,8 +23,12 @@ const Signup = () => {
     //Verifying if already login
     useEffect(() => {
         async function verify() {
-            const result = await axios.get("http://localhost:1111/auth/verify")
-            console.log(result)
+            const result = await axios.get("http://localhost:1111/auth/verify",{
+                withCredentials:true
+            })
+            if(result.data.status){
+                navigate(`/dashboard`)
+            }
         }
 
         verify()

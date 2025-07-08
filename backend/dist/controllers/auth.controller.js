@@ -14,16 +14,6 @@ import { nanoid } from 'nanoid';
 import { checkEmail } from "../utils/checkEmail.js";
 //Secret key for my JWT 
 const secret_Key = process.env.JWT_SECRET || "yoursecretkey";
-//*****Verification routes****** */
-export const VerifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    //If user exist
-    if (req === null || req === void 0 ? void 0 : req.user) {
-        console.log("user", req.user);
-        return res.json({ user: req.user, status: true });
-    }
-    const err = new Error("Credentils are mistake");
-    next(err);
-});
 //*************Signup controller*********
 export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, password, email } = req.body;

@@ -5,13 +5,11 @@ export const authHandler = (req, res, next) => {
         return next();
     }
     const secret = process.env.JWT_SECRET || "yoursecretkey";
-    if (!secret) {
-        return next();
-    }
     try {
         //Verifying the token
         const rawData = jwt.verify(token, secret);
         req.user = { user_id: rawData.user_id };
+        console.log(rawData);
         return next();
     }
     catch (err) {

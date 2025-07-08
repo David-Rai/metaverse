@@ -23,18 +23,6 @@ interface signinBody {
     password: string
 }
 
-//*****Verification routes****** */
-export const VerifyUser = async (req: CustomRequest, res: Response,next:NextFunction) => {
-    //If user exist
-    if (req?.user) {
-        console.log("user", req.user)
-        return res.json({ user: req.user, status: true })
-    }
-  
-    const err=new Error("Credentils are mistake")
-    next(err)
-}
-
 
 //*************Signup controller*********
 export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: Response, next: NextFunction) => {

@@ -22,14 +22,11 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
 
     const secret = process.env.JWT_SECRET || "yoursecretkey"
 
-    if (!secret) {
-        return next()
-    }
-
     try {
         //Verifying the token
         const rawData = jwt.verify(token, secret) as JwtPayload
         req.user = {user_id:rawData.user_id}
+        console.log(rawData)
         return next()
 
     }
