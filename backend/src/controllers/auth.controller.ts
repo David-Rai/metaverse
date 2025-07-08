@@ -5,6 +5,9 @@ import db from '../models/db.js'
 import { nanoid } from 'nanoid'
 import { checkEmail } from "../utils/checkEmail.js";
 import { RowDataPacket } from "mysql2";
+import { authHandler } from "../middlwares/auth.middlware.js";
+import type { CustomRequest } from '../middlwares/auth.middlware.js'
+
 
 //Secret key for my JWT 
 const secret_Key = process.env.JWT_SECRET || "yoursecretkey"
@@ -23,7 +26,7 @@ interface signinBody {
 
 
 //*************Signup controller*********
-export const handleSignup = async (req: Request<{}, {}, signupBody>, res: Response, next: NextFunction) => {
+export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: Response, next: NextFunction) => {
     const { name, password, email } = req.body
     const user_id = nanoid()
 
