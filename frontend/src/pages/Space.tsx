@@ -33,7 +33,6 @@ const Space = () => {
       toast.success("successfully joined the room")
       setPlayers(message.users)
       setUserID(message.user_id)
-      console.log("your id", message.user_id)
     })
 
     //socket connection established
@@ -45,24 +44,21 @@ const Space = () => {
     socket?.on("new-joined", (message) => {
       console.log("someone joined the room")
       setPlayers(message.users)
-      console.log(message)
     })
 
     //When user moves
     socket?.on("new-move", ({ users }) => {
-      console.log("new move obtained")
-      console.log(users)
       setPlayers(users)
     })
 
     //Getting the data on rejoin
     socket?.on("rejoin", (message) => {
-      console.log("rejoin", message)
+      console.log("rejoined")
       setUserID(message.user_id)
       setPlayers(message.users)
     })
 
-    return ()=>{
+    return () => {
       socket?.disconnect()
     }
   }, [])
@@ -98,32 +94,40 @@ const Space = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  
   return (
-    <main className='min-h-screen min-w-screen bg-gray-700'>
-      {players.map((player) => (
-        <div
-          key={player.id}
-          className="flex w-6 h-6 rounded-full text-white text-xs absolute"
-          style={{
-            left: `${player.x}px`,
-            top: `${player.y}px`,
-            backgroundColor: player.user_id === user_id ? "red" : "blue"
-          }}
-          title={`User: ${player.user_id}`}
-        >
-          {player.id}
+    <main className='min-h-screen min-w-screen bg-gray-900 relative overflow-hidden'>
+    {/* Players only - no background effects */}
+    {players.map((player) => (
+      <div
+        key={player.id}
+        className="absolute z-10 transition-transform duration-100 ease-linear"
+        style={{
+          left: `${player.x}px`,
+          top: `${player.y}px`,
+          transform: `translate(-50%, -50%)`,
+        }}
+      >
+        <div className="relative">
+          <div 
+            className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg"
+            style={{
+              background: player.user_id === user_id 
+                ? 'radial-gradient(circle, rgba(239,68,68,1) 0%, rgba(185,28,28,1) 100%)' 
+                : 'radial-gradient(circle, rgba(59,130,246,1) 0%, rgba(29,78,216,1) 100%)',
+              boxShadow: player.user_id === user_id 
+                ? '0 0 10px rgba(239, 68, 68, 0.7)' 
+                : '0 0 8px rgba(59, 130, 246, 0.5)'
+            }}
+          >
+            {player.id}
+          </div>
         </div>
-      ))}
-      {/* <div
-          className="flex w-6 h-6 bg-red-500 rounded-full text-white text-xs absolute"
-          style={{
-            left: `${position.x}px`,
-            top: `${position.y}px`,
-          }}
-        >
-          me
-        </div> */}
-    </main>
+      </div>
+    ))}
+  
+  </main>
+  
   )
 }
 

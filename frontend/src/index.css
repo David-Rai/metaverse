@@ -1,20 +1,92 @@
 @import "tailwindcss";
 
-*{
+* {
     font-family: "Inter", sans-serif;
 }
-@theme{
-    --color-primary-100:#282D4E;
+
+@theme {
+    --color-primary-100: #282D4E;
 }
-@layer components{
-    .btn{
+
+@layer components {
+    .btn {
         @apply h-[40px] w-[140px] text-white rounded-md bg-green-600 my-5
     }
 
     .main {
-        @apply h-screen w-full flex bg-primary-100 flex-col 
+        @apply h-screen w-full flex bg-primary-100 flex-col
     }
-    .input{
-        @apply  border-[1px] border-gray-500 pl-2 rounded-md h-[40px] w-full focus:outline-1 focus:outline-blue-300
+
+    .input {
+        @apply border-[1px] border-gray-500 pl-2 rounded-md h-[40px] w-full focus:outline-1 focus:outline-blue-300
     }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+
+    50% {
+        transform: translateY(-100px) translateX(20px);
+    }
+
+    100% {
+        transform: translateY(0) translateX(0);
+    }
+}
+
+@keyframes float-delay {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+
+    50% {
+        transform: translateY(80px) translateX(-20px);
+    }
+
+    100% {
+        transform: translateY(0) translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-float {
+    animation: float 15s ease-in-out infinite;
+}
+
+.animate-float-delay {
+    animation: float-delay 18s ease-in-out infinite;
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+.delay-500 {
+    animation-delay: 0.5s;
 }
