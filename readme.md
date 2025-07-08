@@ -36,7 +36,19 @@ A real-time multiplayer **Metaverse** application where users can join and inter
 ---
 
 # Architecture
-## Notion - https://safe-cheshire-8a0.notion.site/Meta-verse-2254f5435a56802b9e0be4ba89e06c30?pvs=73
+## Notion 
+ https://safe-cheshire-8a0.notion.site/Meta-verse-2254f5435a56802b9e0be4ba89e06c30?pvs=73
 
 # Database Schemma
 <img src="./architecture//database.png">
+
+# Run on your Machine
+```bash
+git clone https://github.com/david-rai/metaverse.git
+cd frontend
+npm run dev
+
+cd..
+cd backend
+npm run manual
+``
