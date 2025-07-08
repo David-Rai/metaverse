@@ -42,12 +42,26 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         const token = cookies.token || "";
         const secret = process.env.JWT_SECRET || "yoursecretkey";
         const tokenData = jwt.verify(token, secret);
-        console.log(tokenData.user_id);
+        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id;
         //storing into the database
         const q = 'insert into space_user (space_id,user_id) values(?,?)';
         const result = yield db.execute(q, [space_id, user_id]);
-        client.emit("joined", { space_id, status: 201, result });
-        io.to(space_id).emit("new-joined", { user_id });
+        //Getting all the previous user data
+        const q2 = "select * from space_user where space_id=?";
+        const [users] = yield db.execute(q2, [space_id]);
+        //sending the message when joined the space
+        client.emit("joined", { space_id, status: 201, result, users, user_id });
+        client.to(space_id).emit("new-joined", { user_id, users });
+    }));
+    //Getting the user move
+    client.on("move", (_a) => __awaiter(void 0, [_a], void 0, function* ({ user_id, space_id, x, y }) {
+        //Updating the user x and y
+        const q = "update space_user set x=? , y=? where user_id=? and space_id =?";
+        const [result] = yield db.execute(q, [x, y, user_id, space_id]);
+        //Getting all the pervios user data
+        const q2 = "select * from space_user where space_id=?";
+        const [users] = yield db.execute(q2, [space_id]);
+        io.to(space_id).emit("new-move", { users });
     }));
 });

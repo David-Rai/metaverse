@@ -23,6 +23,7 @@ const Createspace = () => {
     //Getting the spaceID
     socket.on("space-created", (message) => {
       console.log("from server",message)
+      toast.success("successfully space created")
       navigate(`/space/${message.space_id}`)
     })
   }, [])

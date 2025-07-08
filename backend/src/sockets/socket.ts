@@ -35,6 +35,7 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         client.join(space_id)//creating the socket room
         client.emit("space-created", { space_id, status: 201 })
+
     })
 
 
@@ -51,15 +52,36 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
-        console.log(tokenData.user_id)
+        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id
 
         //storing into the database
         const q = 'insert into space_user (space_id,user_id) values(?,?)'
         const result = await db.execute(q, [space_id, user_id])
 
-        client.emit("joined", { space_id, status: 201, result })
-        io.to(space_id).emit("new-joined", { user_id })
+        //Getting all the previous user data
+        const q2 = "select * from space_user where space_id=?"
+        const [users] = await db.execute(q2, [space_id])
+
+        //sending the message when joined the space
+        client.emit("joined", { space_id, status: 201, result, users, user_id })
+        client.to(space_id).emit("new-joined", { user_id, users })
+
+    })
+
+
+    //Getting the user move
+    client.on("move",async ({ user_id, space_id, x, y }) => {
+
+        //Updating the user x and y
+        const q="update space_user set x=? , y=? where user_id=? and space_id =?"
+        const [result]=await db.execute(q,[x,y,user_id,space_id])
+    
+        //Getting all the pervios user data
+        const q2 = "select * from space_user where space_id=?"
+        const [users] = await db.execute(q2, [space_id])
+
+        io.to(space_id).emit("new-move", {  users })
 
     })
 }

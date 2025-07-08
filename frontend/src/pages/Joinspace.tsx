@@ -13,8 +13,14 @@ export const Joinspace = () => {
   useEffect(() => {
 
     socket?.on("joined", (message) => {
+      navigate(`/space/${message.space_id}`)
       console.log(message)
     })
+
+    // socket?.on("new-joined",(message)=>{
+    //   console.log("some one joined",message)
+    // })
+
   }, [])
 
   //Handling the joining the space
