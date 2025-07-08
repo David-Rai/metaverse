@@ -53,6 +53,11 @@ const Space = () => {
       setPlayers(users)
     })
 
+    //Getting the data on rejoin
+    socket?.on("rejoin",(message)=>{
+      console.log("rejoin",message)
+    })
+
   }, [])
 
   //For sending my move

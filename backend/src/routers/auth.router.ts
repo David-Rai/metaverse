@@ -9,7 +9,6 @@ const verifyUser = async (req: CustomRequest, res: Response, next: NextFunction)
     try {
         // If user exists
         if (req?.user) {
-            console.log("user from verification", req.user);
             res.json({ user: req.user, status: true });
             return; // Explicit return to ensure we don't continue
         }

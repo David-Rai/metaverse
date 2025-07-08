@@ -4,6 +4,7 @@ import db from '../models/db.js'
 import express from 'express'
 import cookie from 'cookie'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import checkSpace from '../utils/checkSpace.js'
 
 //*****Socket Connection******** */
 export const handleSocketConnection = async (client: Socket, io: Server) => {
@@ -42,8 +43,10 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
     //Joining the space
     client.on("join-space", async ({ space_id }) => {
 
-        //Joinin the socket room
-        client.join(space_id)
+        //Checking if the space id is valid or not
+        // if (!checkSpace(space_id)) return
+        const checkSpaceResult = await checkSpace(space_id)
+        if (!checkSpaceResult) return
 
         //Getting the user_id from token
 
@@ -52,8 +55,28 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
-        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id
+
+        //checking if the user exist in the space or not
+        const check_query = "select * from space_user where user_id = ?"
+        const [check_query_result]: any[] = await db.execute(check_query, [user_id])
+
+
+        // console.log(check_query_result)
+        if (check_query_result.length > 0) {
+            console.log(check_query_result)
+            console.log("invalid")
+
+            //Getting all the previous user data
+            const q2 = "select * from space_user where space_id=?"
+            const [users] = await db.execute(q2, [space_id])
+            
+            client.to(space_id).emit("rejoin", { user_id, users })
+            return
+        }
+
+        //Joinin the socket room
+        client.join(space_id)
 
         //storing into the database
         const q = 'insert into space_user (space_id,user_id) values(?,?)'
@@ -71,17 +94,17 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
 
     //Getting the user move
-    client.on("move",async ({ user_id, space_id, x, y }) => {
+    client.on("move", async ({ user_id, space_id, x, y }) => {
 
         //Updating the user x and y
-        const q="update space_user set x=? , y=? where user_id=? and space_id =?"
-        const [result]=await db.execute(q,[x,y,user_id,space_id])
-    
+        const q = "update space_user set x=? , y=? where user_id=? and space_id =?"
+        const [result] = await db.execute(q, [x, y, user_id, space_id])
+
         //Getting all the pervios user data
         const q2 = "select * from space_user where space_id=?"
         const [users] = await db.execute(q2, [space_id])
 
-        io.to(space_id).emit("new-move", {  users })
+        io.to(space_id).emit("new-move", { users })
 
     })
 }

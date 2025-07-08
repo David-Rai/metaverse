@@ -26,9 +26,7 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
         //Verifying the token
         const rawData = jwt.verify(token, secret) as JwtPayload
         req.user = {user_id:rawData.user_id}
-        console.log(rawData)
         return next()
-
     }
     catch (err) {
         return next(err)

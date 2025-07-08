@@ -15,7 +15,6 @@ const verifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     try {
         // If user exists
         if (req === null || req === void 0 ? void 0 : req.user) {
-            console.log("user from verification", req.user);
             res.json({ user: req.user, status: true });
             return; // Explicit return to ensure we don't continue
         }
