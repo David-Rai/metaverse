@@ -5,7 +5,6 @@ import db from '../models/db.js'
 import { nanoid } from 'nanoid'
 import { checkEmail } from "../utils/checkEmail.js";
 import { RowDataPacket } from "mysql2";
-import { authHandler } from "../middlwares/auth.middlware.js";
 import type { CustomRequest } from '../middlwares/auth.middlware.js'
 
 
@@ -24,11 +23,29 @@ interface signinBody {
     password: string
 }
 
+//*****Verification routes****** */
+export const VerifyUser = async (req: CustomRequest, res: Response,next:NextFunction) => {
+    //If user exist
+    if (req?.user) {
+        console.log("user", req.user)
+        return res.json({ user: req.user, status: true })
+    }
+  
+    const err=new Error("Credentils are mistake")
+    next(err)
+}
+
 
 //*************Signup controller*********
 export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: Response, next: NextFunction) => {
     const { name, password, email } = req.body
     const user_id = nanoid()
+
+    //If user exist
+    if (req?.user) {
+        console.log("user", req.user)
+        res.json(req.user)
+    }
 
     //Checking the email existance
     const exist = await checkEmail(email)
@@ -82,7 +99,7 @@ export const handleSignin = async (req: Request<{}, {}, signinBody>, res: Respon
             const err = new Error("password milena")
             return next(err)
         }
-        
+
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key)
         res.cookie("token", token)//setting the cookies in client side

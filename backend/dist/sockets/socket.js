@@ -23,8 +23,9 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         const token = cookies.token || "";
         const secret = process.env.JWT_SECRET || "yoursecretkey";
         const tokenData = jwt.verify(token, secret);
-        console.log(tokenData.user_id);
+        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id;
+        console.log(tokenData);
         //Storing the room data into the database
         const q = "insert into spaces (space_name,space_id,user_id) values(?,?,?)";
         const result = yield db.execute(q, [space_name, space_id, user_id]);

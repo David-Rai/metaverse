@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import type { SubmitHandler } from 'react-hook-form'
 import axios from 'axios'
@@ -10,6 +10,7 @@ type Inputs = {
     email: string
 }
 
+//Main components function
 const Signup = () => {
     const navigate = useNavigate()
     const {
@@ -18,6 +19,16 @@ const Signup = () => {
         formState: { errors },
     } = useForm()
 
+
+    //Verifying if already login
+    useEffect(() => {
+        async function verify() {
+            const result = await axios.get("http://localhost:1111/auth/verify")
+            console.log(result)
+        }
+
+        verify()
+    }, [])
 
     //Navigating to the login page
     const handleGoToLogin = () => {

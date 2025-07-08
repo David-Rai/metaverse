@@ -11,7 +11,7 @@ export const authHandler = (req, res, next) => {
     try {
         //Verifying the token
         const rawData = jwt.verify(token, secret);
-        req.user = rawData;
+        req.user = { user_id: rawData.user_id };
         return next();
     }
     catch (err) {

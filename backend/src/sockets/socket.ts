@@ -23,8 +23,10 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
-        console.log(tokenData.user_id)
+        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id
+        console.log(tokenData)
+
 
         //Storing the room data into the database
         const q = "insert into spaces (space_name,space_id,user_id) values(?,?,?)"
