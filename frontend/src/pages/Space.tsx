@@ -19,7 +19,7 @@ const Space = () => {
   const params = useParams<{ spaceID: string }>()
   const socket = useContext(SocketContext)
   const [players, setPlayers] = useState<player[]>([])
-  const [position, setPosition] = useState({ x: 100, y: 100 }); // Initial position
+  const [position, setPosition] = useState({ x: 0, y: 0 }); // Initial position
   const speed = 10; // Movement speed per key press
   const [user_id, setUserID] = useState<string>("")
 
@@ -49,15 +49,22 @@ const Space = () => {
     })
 
     //When user moves
-    socket?.on("new-move",({users})=>{
+    socket?.on("new-move", ({ users }) => {
+      console.log("new move obtained")
+      console.log(users)
       setPlayers(users)
     })
 
     //Getting the data on rejoin
-    socket?.on("rejoin",(message)=>{
-      console.log("rejoin",message)
+    socket?.on("rejoin", (message) => {
+      console.log("rejoin", message)
+      setUserID(message.user_id)
+      setPlayers(message.users)
     })
 
+    return ()=>{
+      socket?.disconnect()
+    }
   }, [])
 
   //For sending my move

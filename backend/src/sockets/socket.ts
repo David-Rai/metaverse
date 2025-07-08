@@ -24,15 +24,12 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
-        // console.log(tokenData.user_id)
         const user_id = tokenData.user_id
-        console.log(tokenData)
 
 
         //Storing the room data into the database
         const q = "insert into spaces (space_name,space_id,user_id) values(?,?,?)"
         const result = await db.execute(q, [space_name, space_id, user_id])
-        console.log(result)
 
         client.join(space_id)//creating the socket room
         client.emit("space-created", { space_id, status: 201 })
@@ -44,7 +41,6 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
     client.on("join-space", async ({ space_id }) => {
 
         //Checking if the space id is valid or not
-        // if (!checkSpace(space_id)) return
         const checkSpaceResult = await checkSpace(space_id)
         if (!checkSpaceResult) return
 
@@ -64,19 +60,18 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         // console.log(check_query_result)
         if (check_query_result.length > 0) {
-            console.log(check_query_result)
-            console.log("invalid")
+            console.log("invalid you are already exist")
 
             //Getting all the previous user data
             const q2 = "select * from space_user where space_id=?"
             const [users] = await db.execute(q2, [space_id])
-            
-            client.to(space_id).emit("rejoin", { user_id, users })
-            return
-        }
 
-        //Joinin the socket room
-        client.join(space_id)
+
+            //Joinin the socket room
+            client.join(space_id)
+
+            return client.emit("rejoin", { user_id, users })
+        }
 
         //storing into the database
         const q = 'insert into space_user (space_id,user_id) values(?,?)'
@@ -103,6 +98,7 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
         //Getting all the pervios user data
         const q2 = "select * from space_user where space_id=?"
         const [users] = await db.execute(q2, [space_id])
+
 
         io.to(space_id).emit("new-move", { users })
 
