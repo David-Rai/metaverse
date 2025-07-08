@@ -53,6 +53,11 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
 //************Signin controller************
 export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    //If user exist
+    if (req === null || req === void 0 ? void 0 : req.user) {
+        console.log("user", req.user);
+        res.json(req.user);
+    }
     //Checking into the database
     const q = "select * from users where email=?";
     const [rows] = yield db.execute(q, [email]);

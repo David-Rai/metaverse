@@ -5,6 +5,7 @@ import http from 'http'
 import { nanoid } from 'nanoid'
 import { spaceRouter } from './routers/space.router.js'
 import { authRouter } from './routers/auth.router.js'
+import { detailRouter } from './routers/detail.router.js'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import path from 'path'
@@ -40,6 +41,7 @@ app.use(cookieParser())
 //Router implementation
 app.use('/auth', authRouter)
 app.use(spaceRouter)
+app.use(detailRouter)
 
 
 //*******Socket connection handling******* */
@@ -55,7 +57,7 @@ app.get('/:username', async (req, res, next) => {
   if (!token) {
     throw new Error("No token provided");
   }
-  
+
   if (!secret) {
     throw new Error("Missing JWT secret in environment variables");
   }

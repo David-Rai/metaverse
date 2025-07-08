@@ -22,7 +22,7 @@ const verifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         throw new Error("Credentials are incorrect");
     }
     catch (err) {
-        console.log("checking ", req.user);
+        // console.log("checking ", req.user)
         next(err);
     }
 });

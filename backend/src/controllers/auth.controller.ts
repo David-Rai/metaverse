@@ -69,8 +69,15 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
 
 
 //************Signin controller************
-export const handleSignin = async (req: Request<{}, {}, signinBody>, res: Response, next: NextFunction) => {
+export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: Response, next: NextFunction) => {
     const { email, password } = req.body
+
+        //If user exist
+        if (req?.user) {
+            console.log("user", req.user)
+            res.json(req.user)
+        }
+    
 
     //Checking into the database
     const q = "select * from users where email=?"
