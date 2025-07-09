@@ -50,26 +50,13 @@ io.on("connection", (client) => {
 })
 
 //Routing handling
-app.get('/:username', async (req, res, next) => {
-  const { username } = req.params
-  const { token } = req.cookies
-  const secret = process.env.JWT_SECRET || "yoursecretkey"
-  if (!token) {
-    throw new Error("No token provided");
-  }
-
-  if (!secret) {
-    throw new Error("Missing JWT secret in environment variables");
-  }
-  const data = jwt.verify(token, secret)
-
+app.get('/', async (req, res, next) => {
 
   try {
     //getting your details from database
-    const q = "select user_id,email,name from users where name=?"
-    const [result] = await db.execute(q, [username])
-    res.json({ result, token, data })
-
+    const q = "select user_id,user_name from users"
+    const [result] = await db.execute(q)
+    res.json({result})
 
   }
   catch (err) {
