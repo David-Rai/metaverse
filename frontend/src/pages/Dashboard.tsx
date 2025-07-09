@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import axios from 'axios'
 import { SocketContext } from '../context/Socket'
@@ -33,6 +33,7 @@ const Dashboard = () => {
         const res = await axios.get("http://localhost:1111/auth/verify", {
           withCredentials: true
         })
+        console.log(res)
       }
       catch (err) {
         if (err) {

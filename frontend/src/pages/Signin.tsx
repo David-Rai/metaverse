@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import type { SubmitHandler } from 'react-hook-form'
 
 const Signin = () => {
   const navigate = useNavigate()

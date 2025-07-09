@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router";
@@ -10,7 +10,7 @@ import Space from './pages/Space.tsx';
 import Createspace from './pages/Createspace.tsx';
 import { Joinspace } from './pages/Joinspace.tsx';
 import { SocketProvider } from './context/Socket.tsx';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 
 createRoot(document.getElementById('root')!).render(
   <SocketProvider>

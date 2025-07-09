@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useContext } from 'react'
 import { SocketContext } from '../context/Socket.tsx'
 import { useNavigate } from 'react-router'
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 
 const Createspace = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)

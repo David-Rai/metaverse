@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router'
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import type { SubmitHandler } from 'react-hook-form'
 import axios from 'axios'
 
-type Inputs = {
-  username: string
-  password: string
-  email: string
-}
+// type Inputs = {
+//   username: string
+//   password: string
+//   email: string
+// }
 
 //Main components function
 const Signup = () => {
