@@ -23,14 +23,14 @@ const server = http.createServer(app)
 const io = new Server(server, {
   cookie: true,
   cors: {
-    origin: ["https://maetaverse.netlify.app/", "https://maetaverse.netlify.app"],
+    origin: ["https://maetaverse.netlify.app"],
     credentials: true
   }
 });
 
 
 app.use(cors({
-  origin: [ "https://maetaverse.netlify.app/", "https://maetaverse.netlify.app"],
+  origin: [ "https://maetaverse.netlify.app"],
   credentials: true
 }));
 
