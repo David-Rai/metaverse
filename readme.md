@@ -42,6 +42,10 @@ A real-time multiplayer **Metaverse** application where users can join and inter
 # Database Schemma
 <img src="./architecture//database.png">
 
+# Website UI
+<img src="./architecture//landing.png">
+
+
 # Run on your Machine
 ```bash
 git clone https://github.com/david-rai/metaverse.git
