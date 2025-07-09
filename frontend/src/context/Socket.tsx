@@ -11,7 +11,7 @@ interface Props {
  
 //Socket context provider
 export const SocketProvider = ({ children }: Props) => {
-    const socket = io("https://metaverse-ckv5.onrender.com/",{
+    const socket = io("https://metaverse-ckv5.onrender.com",{
       autoConnect:false,
       withCredentials:true
     })
