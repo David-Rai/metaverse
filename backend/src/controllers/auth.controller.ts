@@ -35,6 +35,7 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
         res.json(req.user)
     }
 
+    console.log("Signup")
     //Checking the email existance
     const exist = await checkEmail(email)
     // if (exist.length > 0) {

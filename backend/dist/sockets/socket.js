@@ -40,6 +40,9 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         //Getting the user_id from token
         const cookies = cookie.parse(client.handshake.headers.cookie || "");
         const token = cookies.token || "";
+        if (token === "" || token === undefined) {
+            return client.emit("login-first");
+        }
         const secret = process.env.JWT_SECRET || "yoursecretkey";
         const tokenData = jwt.verify(token, secret);
         const user_id = tokenData.user_id;
@@ -75,5 +78,28 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         const q2 = "select * from space_user where space_id=?";
         const [users] = yield db.execute(q2, [space_id]);
         io.to(space_id).emit("new-move", { users });
+    }));
+    //Deleting the space
+    client.on("delete-space", (_a) => __awaiter(void 0, [_a], void 0, function* ({ space_id }) {
+        console.log("deleting this space ", space_id);
+        //Getting the user_id from token
+        const cookies = cookie.parse(client.handshake.headers.cookie || "");
+        const token = cookies.token || "";
+        if (token === "" || token === undefined) {
+            return client.emit("login-first");
+        }
+        const secret = process.env.JWT_SECRET || "yoursecretkey";
+        const tokenData = jwt.verify(token, secret);
+        const user_id = tokenData.user_id;
+        try {
+            //Deleting the space now
+            const q = 'delete from spaces where space_id = ? and user_id =?';
+            const [result] = yield db.execute(q, [space_id, user_id]);
+            //Deleted successfully message to the client
+            client.emit("delete-success");
+        }
+        catch (err) {
+            console.log(err);
+        }
     }));
 });

@@ -49,6 +49,10 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
         const cookies = cookie.parse(client.handshake.headers.cookie || "");
         const token = cookies.token || "";
 
+        if (token === "" || token === undefined) {
+            return client.emit("login-first")
+        }
+
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
         const user_id = tokenData.user_id
@@ -102,5 +106,36 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
 
         io.to(space_id).emit("new-move", { users })
 
+    })
+
+    //Deleting the space
+    client.on("delete-space", async ({ space_id }) => {
+        console.log("deleting this space ", space_id)
+
+        //Getting the user_id from token
+
+        const cookies = cookie.parse(client.handshake.headers.cookie || "");
+        const token = cookies.token || "";
+
+        if (token === "" || token === undefined) {
+            return client.emit("login-first")
+        }
+
+        const secret = process.env.JWT_SECRET || "yoursecretkey"
+        const tokenData = jwt.verify(token, secret) as JwtPayload
+        const user_id = tokenData.user_id
+
+        try {
+            //Deleting the space now
+            const q = 'delete from spaces where space_id = ? and user_id =?'
+            const [result] = await db.execute(q, [space_id, user_id])
+
+            //Deleted successfully message to the client
+            client.emit("delete-success")
+
+        }
+        catch(err){
+            console.log(err)
+        }
     })
 }

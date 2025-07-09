@@ -23,6 +23,7 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
         console.log("user", req.user);
         res.json(req.user);
     }
+    console.log("Signup");
     //Checking the email existance
     const exist = yield checkEmail(email);
     // if (exist.length > 0) {

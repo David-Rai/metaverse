@@ -16,7 +16,8 @@ export interface CustomRequest<
 export const authHandler = (req: CustomRequest, res: Response, next: NextFunction) => {
     const { token } = req.cookies
 
-    if (!token) {
+    if (token === "" || token === undefined) {
+        console.log("no token found here first")
         return next()
     }
 
@@ -29,6 +30,7 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
         return next()
     }
     catch (err) {
+    console.log("no token found here")
         return next(err)
     }
 

@@ -3,6 +3,7 @@ import React, { use, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 import { io } from 'socket.io-client'
+import { useNavigate } from 'react-router'
 import { useContext } from 'react'
 import { SocketContext } from '../context/Socket'
 
@@ -16,12 +17,14 @@ interface player {
 }
 
 const Space = () => {
+  const navigate=useNavigate()
   const params = useParams<{ spaceID: string }>()
   const socket = useContext(SocketContext)
   const [players, setPlayers] = useState<player[]>([])
   const [position, setPosition] = useState({ x: 0, y: 0 }); // Initial position
   const speed = 10; // Movement speed per key press
   const [user_id, setUserID] = useState<string>("")
+
 
   //Socket connection handling
   useEffect(() => {
@@ -54,8 +57,15 @@ const Space = () => {
     //Getting the data on rejoin
     socket?.on("rejoin", (message) => {
       console.log("rejoined")
+      console.log(message)
       setUserID(message.user_id)
       setPlayers(message.users)
+    })
+
+    //Login first
+    socket?.on("login-first",()=>{
+    toast.error("Login first")
+    navigate("/signup")
     })
 
     return () => {
