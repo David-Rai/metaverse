@@ -22,6 +22,11 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
         const cookies = cookie.parse(client.handshake.headers.cookie || "");
         const token = cookies.token || "";
 
+
+        if (token === "" || token === undefined) {
+            return client.emit("login-first")
+        }
+
         const secret = process.env.JWT_SECRET || "yoursecretkey"
         const tokenData = jwt.verify(token, secret) as JwtPayload
         const user_id = tokenData.user_id
@@ -134,7 +139,7 @@ export const handleSocketConnection = async (client: Socket, io: Server) => {
             client.emit("delete-success")
 
         }
-        catch(err){
+        catch (err) {
             console.log(err)
         }
     })

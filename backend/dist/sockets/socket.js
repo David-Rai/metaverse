@@ -22,6 +22,9 @@ export const handleSocketConnection = (client, io) => __awaiter(void 0, void 0, 
         //Getting the user_id from token
         const cookies = cookie.parse(client.handshake.headers.cookie || "");
         const token = cookies.token || "";
+        if (token === "" || token === undefined) {
+            return client.emit("login-first");
+        }
         const secret = process.env.JWT_SECRET || "yoursecretkey";
         const tokenData = jwt.verify(token, secret);
         const user_id = tokenData.user_id;
