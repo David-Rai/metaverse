@@ -30,7 +30,7 @@ const Dashboard = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        const res = await axios.get("http://localhost:1111/auth/verify", {
+        const res = await axios.get("https://metaverse-ckv5.onrender.com/auth/verify", {
           withCredentials: true
         })
         console.log(res)
@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   //Setting up the Usersdata
   const fetchData = async () => {
-    const result = await axios("http://localhost:1111/myself", {
+    const result = await axios("https://metaverse-ckv5.onrender.com/myself", {
       withCredentials: true
     })
     console.log(result)

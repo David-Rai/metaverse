@@ -20,7 +20,7 @@ const Signin = () => {
   //Verifying if already login
   useEffect(() => {
     async function verify() {
-      const result = await axios.get("http://localhost:1111/auth/verify", {
+      const result = await axios.get("https://metaverse-ckv5.onrender.com/auth/verify", {
         withCredentials: true
       })
       if (result.data.status) {
@@ -34,7 +34,7 @@ const Signin = () => {
   //Handling the login
   const handleLogin = async (data: data) => {
     // console.log(data)
-    const result = await axios.post("http://localhost:1111/auth/signin", {
+    const result = await axios.post("https://metaverse-ckv5.onrender.com/auth/signin", {
       email: data.email,
       password: data.password
     },

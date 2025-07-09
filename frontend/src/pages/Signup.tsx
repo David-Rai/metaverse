@@ -22,7 +22,7 @@ const Signup = () => {
   //Verifying if already login
   useEffect(() => {
     async function verify() {
-      const result = await axios.get("http://localhost:1111/auth/verify", {
+      const result = await axios.get("https://metaverse-ckv5.onrender.com/auth/verify", {
         withCredentials: true
       })
       if (result.data.status) {
@@ -45,7 +45,7 @@ const Signup = () => {
   //Handle the form submission
   const onSubmit = async (data: data) => {
     console.log(data)
-    const result = await axios.post("http://localhost:1111/auth/signup", {
+    const result = await axios.post("https://metaverse-ckv5.onrender.com/auth/signup", {
       name: data.name,
       email: data.email,
       password: data.password
