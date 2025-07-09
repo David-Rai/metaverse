@@ -26,6 +26,9 @@ interface signinBody {
 
 //*************Signup controller*********
 export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: Response, next: NextFunction) => {
+  
+  
+    console.log("lets signin")
     const { name, password, email } = req.body
     const user_id = nanoid()
 
@@ -72,6 +75,8 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
 //************Signin controller************
 export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: Response, next: NextFunction) => {
     const { email, password } = req.body
+
+    console.log("lets signup")
 
         //If user exist
         if (req?.user) {
