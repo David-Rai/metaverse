@@ -19,7 +19,6 @@ import path from 'path';
 import { errorHandler } from './middlwares/error.middlware.js';
 import { handleSocketConnection } from './sockets/socket.js';
 import cookieParser from 'cookie-parser';
-import jwt from 'jsonwebtoken';
 import db from './models/db.js';
 dotenv.config({ path: path.resolve('../.env') });
 //Socket and Routing instance
@@ -28,12 +27,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cookie: true,
     cors: {
-        origin: "http://localhost:5173",
+        origin: "https://maetaverse.netlify.app",
         credentials: true
     }
 });
 app.use(cors({
-    origin: "http://localhost:5173", // your frontend origin here
+    origin: "https://maetaverse.netlify.app",
     credentials: true
 }));
 app.use(express.json());
@@ -48,22 +47,12 @@ io.on("connection", (client) => {
     handleSocketConnection(client, io);
 });
 //Routing handling
-app.get('/:username', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username } = req.params;
-    const { token } = req.cookies;
-    const secret = process.env.JWT_SECRET || "yoursecretkey";
-    if (!token) {
-        throw new Error("No token provided");
-    }
-    if (!secret) {
-        throw new Error("Missing JWT secret in environment variables");
-    }
-    const data = jwt.verify(token, secret);
+app.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //getting your details from database
-        const q = "select user_id,email,name from users where name=?";
-        const [result] = yield db.execute(q, [username]);
-        res.json({ result, token, data });
+        const q = "select user_id,user_name from users";
+        const [result] = yield db.execute(q);
+        res.json({ result });
     }
     catch (err) {
         next(err);
