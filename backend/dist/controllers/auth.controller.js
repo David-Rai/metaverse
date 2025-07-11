@@ -45,7 +45,8 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                     res.cookie('token', token, {
                         secure: true,
                         httpOnly: true,
-                        sameSite: 'none'
+                        sameSite: 'none',
+                        maxAge: 24 * 60 * 60 * 1000 // 1 day
                     });
                     return res.status(201).json({ data: req.body, token, status: 201, result });
                 }
@@ -83,7 +84,8 @@ export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0
         res.cookie('token', token, {
             secure: true,
             httpOnly: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
         });
         res.json({ status: 200, token });
     });

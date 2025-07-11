@@ -62,7 +62,8 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
                 res.cookie('token', token, {
                     secure: true,
                     httpOnly: true,
-                    sameSite:'none'
+                    sameSite:'none',
+                    maxAge: 24 * 60 * 60 * 1000 // 1 day
                 })
 
 
@@ -110,7 +111,8 @@ export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: 
         res.cookie('token', token, {
             secure: true,
             httpOnly: true,
-            sameSite:'none'
+            sameSite:'none',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
         })
         res.json({ status: 200, token })
     });
