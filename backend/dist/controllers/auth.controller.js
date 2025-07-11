@@ -44,7 +44,8 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                     const token = jwt.sign({ email, user_id }, secret_Key);
                     res.cookie('token', token, {
                         secure: true,
-                        httpOnly: true
+                        httpOnly: true,
+                        sameSite: 'none'
                     });
                     return res.status(201).json({ data: req.body, token, status: 201, result });
                 }
@@ -81,7 +82,8 @@ export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key);
         res.cookie('token', token, {
             secure: true,
-            httpOnly: true
+            httpOnly: true,
+            sameSite: 'none'
         });
         res.json({ status: 200, token });
     });

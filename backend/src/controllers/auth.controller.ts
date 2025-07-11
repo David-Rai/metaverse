@@ -61,7 +61,8 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
                 const token = jwt.sign({ email, user_id }, secret_Key)
                 res.cookie('token', token, {
                     secure: true,
-                    httpOnly: true
+                    httpOnly: true,
+                    sameSite:'none'
                 })
 
 
@@ -108,7 +109,8 @@ export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: 
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key)
         res.cookie('token', token, {
             secure: true,
-            httpOnly: true
+            httpOnly: true,
+            sameSite:'none'
         })
         res.json({ status: 200, token })
     });
