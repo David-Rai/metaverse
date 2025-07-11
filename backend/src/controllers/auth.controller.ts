@@ -26,8 +26,8 @@ interface signinBody {
 
 //*************Signup controller*********
 export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: Response, next: NextFunction) => {
-  
-  
+
+
     console.log("lets signin")
     const { name, password, email } = req.body
     const user_id = nanoid()
@@ -59,7 +59,10 @@ export const handleSignup = async (req: CustomRequest<{}, {}, signupBody>, res: 
 
                 //Creating the JWT Token
                 const token = jwt.sign({ email, user_id }, secret_Key)
-                res.cookie('token', token)
+                res.cookie('token', token, {
+                    secure: true,
+                    httpOnly: true
+                })
 
 
                 return res.status(201).json({ data: req.body, token, status: 201, result })
@@ -78,12 +81,12 @@ export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: 
 
     console.log("lets signup")
 
-        //If user exist
-        if (req?.user) {
-            console.log("user", req.user)
-            res.json(req.user)
-        }
-    
+    //If user exist
+    if (req?.user) {
+        console.log("user", req.user)
+        res.json(req.user)
+    }
+
 
     //Checking into the database
     const q = "select * from users where email=?"
@@ -103,7 +106,10 @@ export const handleSignin = async (req: CustomRequest<{}, {}, signinBody>, res: 
 
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key)
-        res.cookie("token", token)//setting the cookies in client side
+        res.cookie('token', token, {
+            secure: true,
+            httpOnly: true
+        })
         res.json({ status: 200, token })
     });
 

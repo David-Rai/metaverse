@@ -42,7 +42,10 @@ export const handleSignup = (req, res, next) => __awaiter(void 0, void 0, void 0
                     console.log(result);
                     //Creating the JWT Token
                     const token = jwt.sign({ email, user_id }, secret_Key);
-                    res.cookie('token', token);
+                    res.cookie('token', token, {
+                        secure: true,
+                        httpOnly: true
+                    });
                     return res.status(201).json({ data: req.body, token, status: 201, result });
                 }
                 catch (err) {
@@ -76,7 +79,10 @@ export const handleSignin = (req, res, next) => __awaiter(void 0, void 0, void 0
         }
         //Creating the JWT Token
         const token = jwt.sign({ email: rows[0].email, user_id: rows[0].user_id }, secret_Key);
-        res.cookie("token", token); //setting the cookies in client side
+        res.cookie('token', token, {
+            secure: true,
+            httpOnly: true
+        });
         res.json({ status: 200, token });
     });
 });
